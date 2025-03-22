@@ -1491,9 +1491,6 @@ async function fetchTroopsForCurrentGroup(groupId) {
         homeTroops.push(objTroops);
     }
 }
-                    listTroops.forEach((item) => {
-                        objTroops[item.name] = item.value;
-                    });
 
                     objTroops.villageId = villageId;
 
