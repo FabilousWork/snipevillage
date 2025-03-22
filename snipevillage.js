@@ -1,8 +1,9 @@
 /*
  * Script Name: Single Village Snipe
- * Version: v2.3.3
+ * Version: v2.3.4
  * Last Updated: 2024-09-17
  * Author: RedAlert
+ * Fix by: Fabilous
  * Author URL: https://twscripts.dev/
  * Author Contact: redalert_tw (Discord)
  * Approved: N/A (approved after the script approval rules change)
