@@ -1466,35 +1466,36 @@ async function fetchTroopsForCurrentGroup(groupId) {
             const htmlDoc = jQuery.parseHTML(response);
             const homeTroops = [];
 
-				if (mobileCheck) {
-    const homeTroops = [];
+            if (mobileCheck) {
+                let table = jQuery(htmlDoc).find('#combined_table tr.nowrap');
+                for (let i = 0; i < table.length; i++) {
+                    let objTroops = {};
+                    let villageId = parseInt(
+                        table[i]
+                            .getElementsByClassName('quickedit-vn')[0]
+                            .getAttribute('data-id')
+                    );
+                    let listTroops = Array.from(
+                        table[i].getElementsByTagName('img')
+                    )
+                        .filter((e) => e.src.includes('unit'))
+                        .map((e) => ({
+                            name: e.src
+                                .split('unit_')[1]
+                                .replace('@2x.png', ''),
+                            value: parseInt(
+                                e.parentElement.nextElementSibling.innerText
+                            ),
+                        }));
+                    listTroops.forEach((item) => {
+                        objTroops[item.name] = item.value;
+                    });
 
-    jQuery(htmlDoc).find('.widget_content').each(function () {
-        const villageId = parseInt(
-            jQuery(this).find('.quickedit-vn').attr('data-id')
-        );
-        const overviewRow = jQuery(this).find('.overview-units-row');
-        const unitElements = overviewRow.find('.unit-row-item');
+                    objTroops.villageId = villageId;
 
-        const objTroops = { villageId };
-
-        unitElements.each(function () {
-            const img = jQuery(this).find('img');
-            if (!img.length) return;
-
-            const unitType = img
-                .attr('src')
-                .split('unit_')[1]
-                .replace('@2x.png', '');
-            const countText = jQuery(this).find('.unit-row-name').text().trim();
-            const count = parseInt(countText);
-
-            objTroops[unitType] = isNaN(count) ? 0 : count;
-        });
-
-        homeTroops.push(objTroops);
-    });
-}else {
+                    homeTroops.push(objTroops);
+                }
+            } else {
                 const combinedTableRows = jQuery(htmlDoc).find(
                     '#combined_table tr.nowrap'
                 );
@@ -1551,7 +1552,7 @@ async function fetchTroopsForCurrentGroup(groupId) {
         })
         .catch((error) => {
             UI.ErrorMessage(
-                tt('An error occurred while fetching troop counts!')
+                tt('An error occured while fetching troop counts!')
             );
             console.error(`${scriptInfo()} Error:`, error);
         });
