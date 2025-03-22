@@ -1468,6 +1468,8 @@ async function fetchTroopsForCurrentGroup(groupId) {
 
             if (mobileCheck) {
     let rows = jQuery(htmlDoc).find('.overview-container-item');
+    console.log('📦 Gefundene Dorf-Container:', rows.length);
+
     for (let i = 0; i < rows.length; i++) {
         let objTroops = {};
         const villageBlock = jQuery(rows[i]);
@@ -1480,15 +1482,21 @@ async function fetchTroopsForCurrentGroup(groupId) {
 
         unitItems.each(function () {
             const unitImg = jQuery(this).find('img').attr('src');
-            const unitName = unitImg.match(/unit_([a-z_]+)/)[1]; // z.B. spear, sword
-            const amount = parseInt(jQuery(this).find('span').text().trim());
+            const unitName = unitImg.match(/unit_([a-z_]+)/)?.[1];
+            const amountText = jQuery(this).find('.unit-row-name').text().trim();
+            const amount = parseInt(amountText) || 0;
 
-            objTroops[unitName] = amount;
+            if (unitName) {
+                objTroops[unitName] = amount;
+            }
         });
 
         objTroops.villageId = villageId;
         homeTroops.push(objTroops);
     }
+
+    troopCounts = homeTroops; // <-- global setzen
+    return homeTroops;
 }else {
                 const combinedTableRows = jQuery(htmlDoc).find(
                     '#combined_table tr.nowrap'
