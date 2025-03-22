@@ -1466,34 +1466,35 @@ async function fetchTroopsForCurrentGroup(groupId) {
             const htmlDoc = jQuery.parseHTML(response);
             const homeTroops = [];
 
-					if (mobileCheck) {
-			const villages = jQuery(htmlDoc).find('.overview-units-row');
+				if (mobileCheck) {
+    const homeTroops = [];
 
-			villages.each(function () {
-				const villageId = parseInt(
-					jQuery(this).closest('.widget_content').find('.quickedit-vn').attr('data-id')
-				);
+    jQuery(htmlDoc).find('.widget_content').each(function () {
+        const villageId = parseInt(
+            jQuery(this).find('.quickedit-vn').attr('data-id')
+        );
+        const overviewRow = jQuery(this).find('.overview-units-row');
+        const unitElements = overviewRow.find('.unit-row-item');
 
-				const unitElements = jQuery(this).find('.unit-row-item');
-				const objTroops = { villageId };
+        const objTroops = { villageId };
 
-				unitElements.each(function () {
-					const img = jQuery(this).find('img');
-					if (!img.length) return;
+        unitElements.each(function () {
+            const img = jQuery(this).find('img');
+            if (!img.length) return;
 
-					const unitType = img
-						.attr('src')
-						.split('unit_')[1]
-						.replace('@2x.png', '');
-					const countText = jQuery(this).find('.unit-row-name').text().trim();
-					const count = parseInt(countText);
+            const unitType = img
+                .attr('src')
+                .split('unit_')[1]
+                .replace('@2x.png', '');
+            const countText = jQuery(this).find('.unit-row-name').text().trim();
+            const count = parseInt(countText);
 
-					objTroops[unitType] = isNaN(count) ? 0 : count;
-				});
+            objTroops[unitType] = isNaN(count) ? 0 : count;
+        });
 
-				homeTroops.push(objTroops);
-			});
-		} else {
+        homeTroops.push(objTroops);
+    });
+}else {
                 const combinedTableRows = jQuery(htmlDoc).find(
                     '#combined_table tr.nowrap'
                 );
