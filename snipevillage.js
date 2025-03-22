@@ -509,13 +509,13 @@ function renderUI(body) {
 			.ra-single-village-snipe label { font-weight: 600 !important; margin-bottom: 5px; display: block; }
 			.ra-single-village-snipe select { width: 100%; padding: 5px 10px; border: 1px solid #000; font-size: 16px; line-height: 1; }
 			.ra-single-village-snipe .btn-confirm-yes { padding: 3px; }
-
+			
 			${
                 mobiledevice
                     ? '.ra-single-village-snipe { margin: 5px; border-radius: 10px; } .ra-single-village-snipe h2 { margin: 0 0 10px 0; font-size: 18px; } .ra-single-village-snipe .ra-grid { grid-template-columns: 1fr } .ra-single-village-snipe .ra-grid > div { margin-bottom: 15px; } .ra-single-village-snipe .btn { margin-bottom: 8px; margin-right: 8px; } .ra-single-village-snipe select { height: auto; } .ra-single-village-snipe input[type="text"] { height: auto; } .ra-hide-on-mobile { display: none; }'
                     : '.ra-single-village-snipe .ra-grid { display: grid; grid-template-columns: 150px 1fr 100px 150px 150px; grid-gap: 0 20px; }'
             }
-
+			
 			/* Normal Table */
 			.ra-table { border-collapse: separate !important; border-spacing: 2px !important; }
 			.ra-table label,
@@ -1467,35 +1467,36 @@ async function fetchTroopsForCurrentGroup(groupId) {
             const homeTroops = [];
 
             if (mobileCheck) {
-    let table = jQuery(htmlDoc).find('#combined_table tr.nowrap');
-    for (let i = 0; i < table.length; i++) {
-        let objTroops = {};
-        let villageId = parseInt(
-            table[i].querySelector('.quickedit-vn')?.getAttribute('data-id')
-        );
+                const villages = jQuery(htmlDoc).find('.overview-units-row');
 
-        let unitDivs = table[i].querySelectorAll('.unit-row-item');
-        unitDivs.forEach((div) => {
-            const img = div.querySelector('img');
-            const span = div.querySelector('span.unit-row-name');
-            if (img && span) {
-                const unitName = img.src.match(/unit_(\w+)/)?.[1];
-                const unitCount = parseInt(span.textContent.trim());
-                if (unitName) {
-                    objTroops[unitName] = unitCount;
-                }
-            }
-        });
+                villages.each(function () {
+                    const unitElements = jQuery(this).find('.unit-row-item');
+                    const villageId = parseInt(
+                        jQuery(this).closest('.overview-units-row')
+                            .prevAll('.quickedit-vn')
+                            .first()
+                            .attr('data-id')
+                    );
 
-        objTroops.villageId = villageId;
-        homeTroops.push(objTroops);
-    }
-}
+                    const objTroops = { villageId };
 
-                    objTroops.villageId = villageId;
+                    unitElements.each(function () {
+                        const img = jQuery(this).find('img');
+                        if (!img.length) return;
+
+                        const unitType = img
+                            .attr('src')
+                            .split('unit_')[1]
+                            .replace('@2x.png', '');
+                        const count = parseInt(
+                            jQuery(this).find('.unit-row-name').text()
+                        );
+
+                        objTroops[unitType] = isNaN(count) ? 0 : count;
+                    });
 
                     homeTroops.push(objTroops);
-                }
+                });
             } else {
                 const combinedTableRows = jQuery(htmlDoc).find(
                     '#combined_table tr.nowrap'
@@ -1553,7 +1554,7 @@ async function fetchTroopsForCurrentGroup(groupId) {
         })
         .catch((error) => {
             UI.ErrorMessage(
-                tt('An error occured while fetching troop counts!')
+                tt('An error occurred while fetching troop counts!')
             );
             console.error(`${scriptInfo()} Error:`, error);
         });
