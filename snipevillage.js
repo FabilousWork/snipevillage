@@ -1467,35 +1467,29 @@ async function fetchTroopsForCurrentGroup(groupId) {
             const homeTroops = [];
 
             if (mobileCheck) {
-                let table = jQuery(htmlDoc).find('#combined_table tr.nowrap');
-                for (let i = 0; i < table.length; i++) {
-                    let objTroops = {};
-                    let villageId = parseInt(
-                        table[i]
-                            .getElementsByClassName('quickedit-vn')[0]
-                            .getAttribute('data-id')
-                    );
-                    let listTroops = Array.from(
-                        table[i].getElementsByTagName('img')
-                    )
-                        .filter((e) => e.src.includes('unit'))
-                        .map((e) => ({
-                            name: e.src
-                                .split('unit_')[1]
-                                .replace('@2x.png', ''),
-                            value: parseInt(
-                                e.parentElement.nextElementSibling.innerText
-                            ),
-                        }));
-                    listTroops.forEach((item) => {
-                        objTroops[item.name] = item.value;
-                    });
+    let rows = jQuery(htmlDoc).find('.overview-container-item');
+    for (let i = 0; i < rows.length; i++) {
+        let objTroops = {};
+        const villageBlock = jQuery(rows[i]);
 
-                    objTroops.villageId = villageId;
+        const villageId = parseInt(
+            villageBlock.find('.quickedit-vn').attr('data-id')
+        );
 
-                    homeTroops.push(objTroops);
-                }
-            } else {
+        const unitItems = villageBlock.find('.unit-row-item');
+
+        unitItems.each(function () {
+            const unitImg = jQuery(this).find('img').attr('src');
+            const unitName = unitImg.match(/unit_([a-z_]+)/)[1]; // z.B. spear, sword
+            const amount = parseInt(jQuery(this).find('span').text().trim());
+
+            objTroops[unitName] = amount;
+        });
+
+        objTroops.villageId = villageId;
+        homeTroops.push(objTroops);
+    }
+}else {
                 const combinedTableRows = jQuery(htmlDoc).find(
                     '#combined_table tr.nowrap'
                 );
