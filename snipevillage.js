@@ -18,8 +18,8 @@
 var scriptData = {
     prefix: 'singleVillageSnipe',
     name: 'Single Village Snipe',
-    version: 'v2.3.2',
-    author: 'RedAlert',
+    version: 'v2.3.4',
+    author: 'RedAlert, Fabilous',
     authorUrl: 'https://twscripts.dev/',
     helpLink:
         'https://forum.tribalwars.net/index.php?threads/single-village-snipe.286731/',
