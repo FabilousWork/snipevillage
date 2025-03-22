@@ -229,7 +229,7 @@ var translations = {
         'Error fetching village groups!': 'Fehler Dörfergruppen zu laden!',
         'Choose Units to Snipe': 'Wähle Einheiten zum berechnen',
         Group: 'Gruppe',
-        'No possible snipe options found!': 'Keine mölichen Befehle gefunden!',
+        'No possible snipe options found!': 'Keine möglichen Befehle gefunden!',
         Distance: 'Entfernung',
         'An error occured while fetching troop counts!':
             'Ein Fehler ist beim laden der Truppen Informationen aufgetreten!',
@@ -247,7 +247,7 @@ var translations = {
         'Nothing to import!': 'Keine Daten zum importieren!',
         'There was an error fetching villages by group!':
             'Fehler DÃ¶rfer bei Gruppen zu laden!',
-        'Reset Chosen Group': 'GewÃ¤hlte Gruppe zurücksetzen',
+        'Reset Chosen Group': 'Gewählte Gruppe zurücksetzen',
         'Chosen group was reset!': 'GewÃ¤hlte Gruppe wurde zurückgesetzt!',
         'There was an error!': 'Es gab einen Fehler!',
         'Configuration has been copied!': 'Konfiguration wurde kopiert!',
